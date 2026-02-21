@@ -96,5 +96,10 @@ class VirtualPetApp:
 # Entry point
 if __name__ == "__main__":
     # Create app with device ID (0 or 1)
+    print("Press Ctrl+C to stop boot")
+
+    for i in range(5):
+        time.sleep(1)
+
     app = VirtualPetApp(device_id=0)
     app.run()
