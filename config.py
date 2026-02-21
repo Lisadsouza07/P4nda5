@@ -1,8 +1,8 @@
 # ESP32-C3 Pin Configuration and Settings
 
 # I2C Display Configuration
-I2C_SDA_PIN = 5
-I2C_SCL_PIN = 4
+I2C_SDA_PIN = 4
+I2C_SCL_PIN = 5
 I2C_FREQ = 400000
 
 # LoRA Module Configuration (SX1278)
