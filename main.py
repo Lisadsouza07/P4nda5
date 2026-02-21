@@ -100,7 +100,7 @@ if __name__ == "__main__":
     if button.value() == 0:
         print("Safe mode: skipping main")
     else:
-        app = VirtualPetApp(device_id=0)
+        app = VirtualPetApp(device_id=1)
         app.run()
         
 
