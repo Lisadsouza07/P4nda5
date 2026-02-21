@@ -77,7 +77,9 @@ class LoRaCommunication:
             return False
         
         try:
-            self.lora.println(data, implicit_header=False)
+            self.lora.begin_packet(implicit_header_mode=False)
+            self.lora.write(data)
+            self.lora.end_packet()
             self.lora.receive()  # Return to receive mode after sending
             return True
         except Exception as e:
@@ -101,6 +103,6 @@ class LoRaCommunication:
                 self.lora.receive()
                 return payload
         except Exception as e:
-            print(f"LoRA receive error: {e}")
+            print("LoRA receive error: {}".format(e))
         
         return None
