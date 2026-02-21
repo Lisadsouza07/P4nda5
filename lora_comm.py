@@ -102,7 +102,11 @@ class LoRaCommunication:
                 # Resume receiving after reading payload
                 self.lora.receive()
                 return payload
+            else:
+                # If no packet, ensure we're back in RX_CONTINUOUS mode
+                # (received_packet() switches to RX_SINGLE if no packet found)
+                self.lora.receive()
         except Exception as e:
-            print("LoRA receive error: {}".format(e))
+            print(f"LoRA receive error: {e}")
         
         return None
