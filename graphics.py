@@ -16,16 +16,21 @@ class GraphicsEngine:
         self.sprite_manager = SpriteManager()
         self.last_frame_time = time.time()
         self.should_update_frame = False
-        
-    def update(self, pet_state):
+    
+    def update(self, pet_state, health_system=None):
         """
         Update and render the display
         
         Args:
             pet_state: PetState object
+            health_system: HealthSystem object (optional)
         """
         current_time = time.time()
         elapsed_ms = (current_time - self.last_frame_time) * 1000
+        
+        # Update health system if provided
+        if health_system:
+            health_system.update()
         
         # Check if it's time to update animation frame
         if elapsed_ms >= ANIMATION_FRAME_MS:
@@ -34,10 +39,10 @@ class GraphicsEngine:
         
         # Only redraw if state changed
         if pet_state.is_dirty:
-            self.draw_frame(pet_state)
+            self.draw_frame(pet_state, health_system)
     
-    def draw_frame(self, pet_state):
-        """Draw current pet state"""
+    def draw_frame(self, pet_state, health_system=None):
+        """Draw current pet state with health bars"""
         self.display.fill(0)  # Clear display
         
         state_name = pet_state.get_state_name()
@@ -55,11 +60,43 @@ class GraphicsEngine:
             
             self._draw_bitmap(sprite_bitmap, x, y)
         
+        # Draw health bars on sides if health_system provided
+        if health_system:
+            self._draw_health_bars(health_system)
+        
         # Draw status text at bottom
         self.display.text(state_name.upper(), 0, 56, 1)
         
         self.display.show()
         pet_state.reset_dirty_flag()
+    
+    def _draw_health_bars(self, health_system):
+        """
+        Draw two health bars on left and right sides
+        Left: Wireless health (LoRA sync)
+        Right: Contact health (physical contact)
+        """
+        bar_width = 4
+        bar_height = 32
+        bar_y = (DISPLAY_HEIGHT - bar_height) // 2
+        
+        # Left bar - Wireless health
+        wireless_pixels = health_system.get_wireless_health_pixels(bar_height)
+        left_x = 1
+        if wireless_pixels > 0:
+            # Draw filled portion
+            for px in range(wireless_pixels):
+                for py in range(bar_width):
+                    self.display.pixel(left_x + py, bar_y + (bar_height - px - 1), 1)
+        
+        # Right bar - Contact health
+        contact_pixels = health_system.get_contact_health_pixels(bar_height)
+        right_x = DISPLAY_WIDTH - bar_width - 1
+        if contact_pixels > 0:
+            # Draw filled portion
+            for px in range(contact_pixels):
+                for py in range(bar_width):
+                    self.display.pixel(right_x + py, bar_y + (bar_height - px - 1), 1)
     
     def _draw_bitmap(self, bitmap_data, x, y):
         """

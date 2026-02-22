@@ -1,12 +1,14 @@
 # P4nda5 Virtual Pet - Main Application
 
 from machine import Pin
-from config import LORA_SYNC_MS, DEBUG
+from config import LORA_SYNC_MS, DEBUG, ONEWIRE_PIN
 from pet_state import PetState
 from graphics import GraphicsEngine
+from health_system import HealthSystem
 from lora_comm import LoRaCommunication
 from utils.i2c_display import Display
 from utils.button_handler import ButtonHandler
+from utils.onewire_contact import OneWireContact
 import time
 
 class VirtualPetApp:
@@ -25,11 +27,18 @@ class VirtualPetApp:
         print("Initializing graphics engine...")
         self.graphics = GraphicsEngine(self.display)
         
+        print("Initializing health system...")
+        self.health = HealthSystem()
+        
         print("Initializing LoRA communication...")
         self.lora = LoRaCommunication()
         
         print("Initializing button handler...")
         self.button = ButtonHandler(self.on_button_pressed)
+        
+        print("Initializing OneWire contact detection...")
+        self.onewire = OneWireContact(ONEWIRE_PIN)
+        self.onewire.on_contact(self.on_physical_contact)
         
         # Timing
         self.last_lora_sync = time.time()
@@ -61,11 +70,21 @@ class VirtualPetApp:
             if DEBUG:
                 print(f"Received: {data.hex()}")
             self.pet_state.parse_sync_packet(data)
+            self.health.on_wireless_sync()
+    
+    def on_physical_contact(self):
+        """Called when physical contact detected via OneWire"""
+        self.health.on_physical_contact()
+        if DEBUG:
+            print("Physical contact detected!")
     
     def run(self):
         """Main application loop"""
-        print("Starting virtual pet application...")
-        
+        print("StaCheck for physical contact
+                self.onewire.check()
+                
+                # Update graphics with health system
+                self.graphics.update(self.pet_state, self.health
         try:
             while self.running:
                 # Check button input

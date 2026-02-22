@@ -22,6 +22,9 @@ LORA_POWER = 17
 BUTTON_PIN = 0
 BUTTON_DEBOUNCE_MS = 50
 
+# OneWire Contact Detection (physical touch)
+ONEWIRE_PIN = 13
+
 # Display Configuration
 DISPLAY_WIDTH = 128
 DISPLAY_HEIGHT = 64
