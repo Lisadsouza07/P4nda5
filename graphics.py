@@ -103,7 +103,7 @@ class GraphicsEngine:
             
             # Draw filled signal sprites for active ones
             if i < signal_sprites:
-                self._draw_signal_icon(start_x + 1, start_y + i * (sprite_size + spacing) + 1)
+                self._draw_heart_icon(start_x + 1, start_y + i * (sprite_size + spacing) + 1)
         
         # Right side - Contact health bar
         bar_width = 4
@@ -129,10 +129,10 @@ class GraphicsEngine:
                 for py in range(contact_pixels):
                     self.display.pixel(bar_x + px, bar_y + (bar_height - py - 1), 1)
     
-    def _draw_signal_icon(self, x, y):
+    def _draw_heart_icon(self, x, y):
         """Draw wireless/signal indicator icon (8x8) from sprite data"""
-        if "signal_icon" in SPRITE_DATA and SPRITE_DATA["signal_icon"]:
-            icon_bitmap = SPRITE_DATA["signal_icon"][0]
+        if "heart_icon" in SPRITE_DATA and SPRITE_DATA["heart_icon"]:
+            icon_bitmap = SPRITE_DATA["heart_icon"][0]
             self._draw_bitmap(icon_bitmap, x, y)
     
     def _draw_contact_icon(self, x, y):
