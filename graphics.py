@@ -86,7 +86,7 @@ class GraphicsEngine:
         
         # Draw wireless indicator sprite (simple signal bars pattern)
         # 8x8 pixel antenna/signal icon
-        self._draw_signal_icon(left_x - 8, bar_y)
+        self._draw_signal_icon(left_x, bar_y - 8)
         
         # Draw left health bar
         wireless_pixels = health_system.get_wireless_health_pixels(bar_height)
@@ -100,7 +100,7 @@ class GraphicsEngine:
         right_x = DISPLAY_WIDTH - bar_width - 1
         
         # Draw contact indicator sprite (simple hand/touch pattern)
-        self._draw_contact_icon(right_x + bar_width + 1, bar_y)
+        self._draw_contact_icon(right_x, bar_y - 8)
         
         # Draw right health bar
         contact_pixels = health_system.get_contact_health_pixels(bar_height)
