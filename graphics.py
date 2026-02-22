@@ -2,6 +2,7 @@
 
 from config import DISPLAY_WIDTH, DISPLAY_HEIGHT, ANIMATION_FRAME_MS
 from sprites.sprite_manager import SpriteManager
+from sprites.sprite_data import SPRITE_DATA
 import time
 
 class GraphicsEngine:
@@ -72,7 +73,7 @@ class GraphicsEngine:
     
     def _draw_health_bars(self, health_system):
         """
-        Draw two health bars on left and right sides
+        Draw two health bars on left and right sides with indicator sprites
         Left: Wireless health (LoRA sync)
         Right: Contact health (physical contact)
         """
@@ -80,23 +81,62 @@ class GraphicsEngine:
         bar_height = 32
         bar_y = (DISPLAY_HEIGHT - bar_height) // 2
         
-        # Left bar - Wireless health
-        wireless_pixels = health_system.get_wireless_health_pixels(bar_height)
+        # Left side - Wireless health with signal icon
         left_x = 1
+        
+        # Draw wireless indicator sprite (simple signal bars pattern)
+        # 8x8 pixel antenna/signal icon
+        self._draw_signal_icon(left_x - 8, bar_y)
+        
+        # Draw left health bar
+        wireless_pixels = health_system.get_wireless_health_pixels(bar_height)
         if wireless_pixels > 0:
             # Draw filled portion
             for px in range(wireless_pixels):
                 for py in range(bar_width):
                     self.display.pixel(left_x + py, bar_y + (bar_height - px - 1), 1)
         
-        # Right bar - Contact health
-        contact_pixels = health_system.get_contact_health_pixels(bar_height)
+        # Right side - Contact health with touch icon
         right_x = DISPLAY_WIDTH - bar_width - 1
+        
+        # Draw contact indicator sprite (simple hand/touch pattern)
+        self._draw_contact_icon(right_x + bar_width + 1, bar_y)
+        
+        # Draw right health bar
+        contact_pixels = health_system.get_contact_health_pixels(bar_height)
         if contact_pixels > 0:
             # Draw filled portion
             for px in range(contact_pixels):
                 for py in range(bar_width):
                     self.display.pixel(right_x + py, bar_y + (bar_height - px - 1), 1)
+    
+    def _draw_signal_icon(self, x, y):
+        """Draw wireless/signal indicator icon (8x8) from sprite data"""
+        if "signal_icon" in SPRITE_DATA and SPRITE_DATA["signal_icon"]:
+            icon_data = SPRITE_DATA["signal_icon"][0]
+            pattern = icon_data.get('pattern', [])
+            for row in range(8):
+                for col in range(8):
+                    if pattern and row < len(pattern) and col < len(pattern[row]):
+                        if pattern[row][col]:
+                            px = x + col
+                            py = y + row
+                            if 0 <= px < DISPLAY_WIDTH and 0 <= py < DISPLAY_HEIGHT:
+                                self.display.pixel(px, py, 1)
+    
+    def _draw_contact_icon(self, x, y):
+        """Draw contact/touch indicator icon (8x8) from sprite data"""
+        if "contact_icon" in SPRITE_DATA and SPRITE_DATA["contact_icon"]:
+            icon_data = SPRITE_DATA["contact_icon"][0]
+            pattern = icon_data.get('pattern', [])
+            for row in range(8):
+                for col in range(8):
+                    if pattern and row < len(pattern) and col < len(pattern[row]):
+                        if pattern[row][col]:
+                            px = x + col
+                            py = y + row
+                            if 0 <= px < DISPLAY_WIDTH and 0 <= py < DISPLAY_HEIGHT:
+                                self.display.pixel(px, py, 1)
     
     def _draw_bitmap(self, bitmap_data, x, y):
         """
