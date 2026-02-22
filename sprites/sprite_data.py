@@ -304,5 +304,19 @@ SPRITE_DATA = {
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             ]
         }
+    ],
+    "signal_icon": [
+        {
+            'width': 8,
+            'height': 8,
+            'data': [0x04, 0x14, 0x14, 0x3E, 0x22, 0x22, 0x3E, 0x00]
+        }
+    ],
+    "contact_icon": [
+        {
+            'width': 8,
+            'height': 8,
+            'data': [0x00, 0x14, 0x14, 0x3C, 0x0C, 0x04, 0x04, 0x00]
+        }
     ]
 }
