@@ -37,7 +37,7 @@ class VirtualPetApp:
         self.button = ButtonHandler(self.on_button_pressed)
         
         print("Initializing contact reset button...")
-        self.contact_button_pin = Pin(ONEWIRE_PIN, Pin.IN, Pin.PULL_DOWN)
+        self.contact_button_pin = Pin(ONEWIRE_PIN, Pin.IN, Pin.PULL_UP)
         self.contact_button_pressed = False
         
         # Timing
@@ -126,8 +126,8 @@ class VirtualPetApp:
                 # Check button input
                 self.button.check()
                 
-                # Check for contact reset button (GPIO pulled low, pressed = high)
-                contact_pressed = self.contact_button_pin.value() == 1
+                # Check for contact reset button (GPIO pulled high, pressed = low)
+                contact_pressed = self.contact_button_pin.value() == 0
                 if contact_pressed and not self.contact_button_pressed:
                     self.on_physical_contact()
                 self.contact_button_pressed = contact_pressed
