@@ -149,3 +149,4 @@ class GraphicsEngine:
                         py = y + row
                         if 0 <= px < DISPLAY_WIDTH and 0 <= py < DISPLAY_HEIGHT:
                             self.display.pixel(px, py, 1)
+    
