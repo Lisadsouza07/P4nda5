@@ -113,30 +113,14 @@ class GraphicsEngine:
     def _draw_signal_icon(self, x, y):
         """Draw wireless/signal indicator icon (8x8) from sprite data"""
         if "signal_icon" in SPRITE_DATA and SPRITE_DATA["signal_icon"]:
-            icon_data = SPRITE_DATA["signal_icon"][0]
-            pattern = icon_data.get('pattern', [])
-            for row in range(8):
-                for col in range(8):
-                    if pattern and row < len(pattern) and col < len(pattern[row]):
-                        if pattern[row][col]:
-                            px = x + col
-                            py = y + row
-                            if 0 <= px < DISPLAY_WIDTH and 0 <= py < DISPLAY_HEIGHT:
-                                self.display.pixel(px, py, 1)
+            icon_bitmap = SPRITE_DATA["signal_icon"][0]
+            self._draw_bitmap(icon_bitmap, x, y)
     
     def _draw_contact_icon(self, x, y):
         """Draw contact/touch indicator icon (8x8) from sprite data"""
         if "contact_icon" in SPRITE_DATA and SPRITE_DATA["contact_icon"]:
-            icon_data = SPRITE_DATA["contact_icon"][0]
-            pattern = icon_data.get('pattern', [])
-            for row in range(8):
-                for col in range(8):
-                    if pattern and row < len(pattern) and col < len(pattern[row]):
-                        if pattern[row][col]:
-                            px = x + col
-                            py = y + row
-                            if 0 <= px < DISPLAY_WIDTH and 0 <= py < DISPLAY_HEIGHT:
-                                self.display.pixel(px, py, 1)
+            icon_bitmap = SPRITE_DATA["contact_icon"][0]
+            self._draw_bitmap(icon_bitmap, x, y)
     
     def _draw_bitmap(self, bitmap_data, x, y):
         """
