@@ -10,6 +10,8 @@ class PetState:
         self.last_update = time.time()
         self.animation_frame = 0
         self.is_dirty = True  # Flag for display refresh
+        self.is_error = False  # Error state flag
+        self.previous_state = 0  # Store state before error
         
     def set_state(self, state_id):
         """Change pet state"""
@@ -38,6 +40,8 @@ class PetState:
     
     def get_state_name(self):
         """Get current state name"""
+        if self.is_error:
+            return "error"
         return PET_STATES.get(self.current_state, "unknown")
     
     def update_animation(self):

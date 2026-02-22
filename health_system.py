@@ -21,13 +21,19 @@ class HealthSystem:
         self.contact_timeout = 30.0   # Health fully depletes in 30 seconds without contact
     
     def on_wireless_sync(self):
-        """Called when LoRA packet is received - reduces signal sprites and boosts contact health"""
-        self.wireless_health = max(0, self.wireless_health - 25)  # Remove one "signal sprite" (25%)
+        """Called when LoRA packet is received - reduces signal sprites and boosts contact health by 20%
+        Returns True if successful, False if all signals depleted"""
+        if self.wireless_health <= 0:
+            # No signals left, cannot sync
+            return False
+        
+        self.wireless_health = max(0, self.wireless_health - 33)  # Remove one "signal sprite" (~33%)
         self.contact_health = min(100, self.contact_health + 20)  # Boost contact health by 20%
         self.last_wireless_update = time.time()
         self.last_contact_update = time.time()
         if DEBUG:
             print(f"Wireless sync! Wireless: {self.wireless_health}, Contact: {self.contact_health}")
+        return True
     
     def on_physical_contact(self):
         """Called when OneWire contact detected - replenishes both bars"""
@@ -56,9 +62,9 @@ class HealthSystem:
     
     def get_wireless_signal_sprites(self):
         """Return number of signal sprites to draw (0-3)"""
-        if self.wireless_health >= 75:
+        if self.wireless_health >= 67:
             return 3
-        elif self.wireless_health >= 50:
+        elif self.wireless_health >= 34:
             return 2
         elif self.wireless_health > 0:
             return 1

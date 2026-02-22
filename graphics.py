@@ -48,26 +48,31 @@ class GraphicsEngine:
         """Draw current pet state with health bars"""
         self.display.fill(0)  # Clear display
         
-        state_name = pet_state.get_state_name()
-        frame_idx = pet_state.animation_frame
-        
-        # Get sprite for current state and frame
-        sprite_bitmap = self.sprite_manager.get_sprite(state_name, frame_idx)
-        
-        if sprite_bitmap:
-            # Draw sprite centered on display
-            sprite_width = sprite_bitmap.get('width', 32)
-            sprite_height = sprite_bitmap.get('height', 32)
-            x = (DISPLAY_WIDTH - sprite_width) // 2
-            y = (DISPLAY_HEIGHT - sprite_height) // 2
+        if pet_state.is_error:
+            # Draw error sprite (X symbol)
+            self._draw_error_sprite()
+        else:
+            state_name = pet_state.get_state_name()
+            frame_idx = pet_state.animation_frame
             
-            self._draw_bitmap(sprite_bitmap, x, y)
-        
-        # Draw health indicators on sides if health_system provided
-        if health_system:
-            self._draw_health_indicators(health_system)
+            # Get sprite for current state and frame
+            sprite_bitmap = self.sprite_manager.get_sprite(state_name, frame_idx)
+            
+            if sprite_bitmap:
+                # Draw sprite centered on display
+                sprite_width = sprite_bitmap.get('width', 32)
+                sprite_height = sprite_bitmap.get('height', 32)
+                x = (DISPLAY_WIDTH - sprite_width) // 2
+                y = (DISPLAY_HEIGHT - sprite_height) // 2
+                
+                self._draw_bitmap(sprite_bitmap, x, y)
+            
+            # Draw health indicators on sides if health_system provided
+            if health_system:
+                self._draw_health_indicators(health_system)
         
         # Draw status text at bottom
+        state_name = pet_state.get_state_name()
         self.display.text(state_name.upper(), 0, 56, 1)
         
         self.display.show()
@@ -164,3 +169,22 @@ class GraphicsEngine:
                         if 0 <= px < DISPLAY_WIDTH and 0 <= py < DISPLAY_HEIGHT:
                             self.display.pixel(px, py, 1)
     
+    def _draw_error_sprite(self):
+        """Draw error sprite (X symbol) in center of display"""
+        center_x = DISPLAY_WIDTH // 2
+        center_y = (DISPLAY_HEIGHT - 16) // 2  # Offset for text at bottom
+        size = 16
+        
+        # Draw X (two diagonal lines)
+        for i in range(size):
+            # Draw from top-left to bottom-right
+            x1 = center_x - size // 2 + i
+            y1 = center_y - size // 2 + i
+            if 0 <= x1 < DISPLAY_WIDTH and 0 <= y1 < DISPLAY_HEIGHT:
+                self.display.pixel(x1, y1, 1)
+            
+            # Draw from top-right to bottom-left
+            x2 = center_x + size // 2 - i
+            y2 = center_y - size // 2 + i
+            if 0 <= x2 < DISPLAY_WIDTH and 0 <= y2 < DISPLAY_HEIGHT:
+                self.display.pixel(x2, y2, 1)
