@@ -77,7 +77,12 @@ class LoRaCommunication:
             return False
         
         try:
-            self.lora.println(data, implicit_header=False)
+            print(f"TX: Sending {len(data)} bytes")
+            self.lora.begin_packet(implicit_header_mode=False)
+            self.lora.write(data)
+            print("TX: Waiting for TX_DONE...")
+            self.lora.end_packet()
+            print("TX: Packet sent, returning to RX mode")
             self.lora.receive()  # Return to receive mode after sending
             return True
         except Exception as e:
@@ -95,11 +100,22 @@ class LoRaCommunication:
             return None
         
         try:
-            if self.lora.received_packet():
+            irq_flags = self.lora.read_register(0x12)  # REG_IRQ_FLAGS
+            if irq_flags & 0x40:  # IRQ_RX_DONE_MASK
+                print(f"RX: Packet detected (IRQ: 0x{irq_flags:02x})")
                 payload = self.lora.read_payload()
+                print(f"RX: Got {len(payload)} bytes")
+                # Clear the RX_DONE interrupt flag (0x40) before resuming rx
+                self.lora.write_register(0x12, 0x40)
                 # Resume receiving after reading payload
+                # Clear the RX_DONE interrupt flag (0x40) before resuming rx
+                self.lora.write_register(0x12, 0x40)
                 self.lora.receive()
                 return payload
+            else:
+                # If no packet, ensure we're back in RX_CONTINUOUS mode
+                # (received_packet() switches to RX_SINGLE if no packet found)
+                self.lora.receive()
         except Exception as e:
             print(f"LoRA receive error: {e}")
         
