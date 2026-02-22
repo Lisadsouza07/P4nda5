@@ -36,7 +36,6 @@ PET_STATES = {
     1: "hungry",
     2: "sad",
     3: "sleeping",
-    4: "playful"
 }
 
 # Animation frame rate (ms per frame)
