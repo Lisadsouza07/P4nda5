@@ -93,14 +93,6 @@ class GraphicsEngine:
         start_y = 10
         
         for i in range(3):  # Draw up to 3 sprite slots
-            # Draw outline for all 3 positions
-            for px in range(sprite_size):
-                self.display.pixel(start_x + px, start_y + i * (sprite_size + spacing), 1)
-                self.display.pixel(start_x + px, start_y + i * (sprite_size + spacing) + sprite_size - 1, 1)
-            for py in range(sprite_size):
-                self.display.pixel(start_x, start_y + i * (sprite_size + spacing) + py, 1)
-                self.display.pixel(start_x + sprite_size - 1, start_y + i * (sprite_size + spacing) + py, 1)
-            
             # Draw filled signal sprites for active ones
             if i < signal_sprites:
                 self._draw_heart_icon(start_x + 1, start_y + i * (sprite_size + spacing) + 1)
@@ -112,7 +104,7 @@ class GraphicsEngine:
         bar_y = (DISPLAY_HEIGHT - bar_height) // 2
         
         # Draw contact icon above bar
-        self._draw_contact_icon(bar_x - 11, bar_y - 8)
+        self._draw_contact_icon(bar_x - 15, bar_y)
         
         # Draw health bar outline
         for px in range(bar_width):
@@ -131,7 +123,7 @@ class GraphicsEngine:
     
     def _draw_heart_icon(self, x, y):
         """Draw wireless/signal indicator icon (8x8) from sprite data"""
-        if "heart_icon" in SPRITE_DATA and SPRITE_DATA["empty_heart_icon"]:
+        if "empty_heart_icon" in SPRITE_DATA and SPRITE_DATA["empty_heart_icon"]:
             icon_bitmap = SPRITE_DATA["empty_heart_icon"][0]
             self._draw_bitmap(icon_bitmap, x, y)
     
